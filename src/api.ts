@@ -1,3 +1,21 @@
+export interface Member {
+  fullName: string;
+}
+
+interface MemberApiResult {
+  member: Member;
+}
+
+export interface Vote {
+  debate: {
+    showAs: string;
+  };
+}
+
+interface VoteApiResult {
+  division: Vote;
+}
+
 const apiPrefix = "https://api.oireachtas.ie/v1";
 
 function stringifyQueryParams(params: { [key: string]: string | number }) {
@@ -14,7 +32,7 @@ export async function fetchMembers() {
   const url = `${apiPrefix}/members?${stringifyQueryParams(params)}`;
   const response = await fetch(url);
   const { results } = await response.json();
-  return results.map((result: any) => result.member);
+  return results.map((result: MemberApiResult) => result.member);
 }
 
 export async function fetchVotes() {
@@ -26,5 +44,5 @@ export async function fetchVotes() {
   const url = `${apiPrefix}/divisions?${stringifyQueryParams(params)}`;
   const response = await fetch(url);
   const { results } = await response.json();
-  return results.map((result: any) => result.division.subject.showAs);
+  return results.map((result: VoteApiResult) => result.division);
 }

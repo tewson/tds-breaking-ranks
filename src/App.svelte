@@ -1,8 +1,9 @@
 <script lang="ts">
+  import type { Member, Vote } from "./api";
   import { fetchMembers, fetchVotes } from "./api";
 
-  let members: any[] = [];
-  let votes: string[] = [];
+  let members: Member[] = [];
+  let votes: Vote[] = [];
 
   async function init() {
     members = await fetchMembers();
@@ -21,7 +22,7 @@
   </ul>
   <ul>
     {#each votes as vote}
-      <li>{vote}</li>
+      <li>{vote.debate.showAs}</li>
     {/each}
   </ul>
 </main>
