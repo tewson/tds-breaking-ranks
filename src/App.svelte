@@ -35,6 +35,7 @@
   <section class="section">
     <div class="container">
       <h1 class="title">Breaking Ranks</h1>
+      <h2 class="subtitle">Which TDs have voted against their party?</h2>
       <div class="dail-select mb-4">
         <label for="dail-select" class="label is-inline-block mr-4">
           Dáil term:
