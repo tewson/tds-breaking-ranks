@@ -5,10 +5,12 @@
   import Vote from "./Vote.svelte";
 
   let votes: VoteType[] = [];
-  let term = 33;
+  const termOptions = [33, 32, 31];
+  let selectedTerm = termOptions[0];
 
   async function init() {
-    const allVotes = await fetchVotes(term);
+    votes = [];
+    const allVotes = await fetchVotes(selectedTerm);
     votes = allVotes.filter(vote => {
       return (
         vote.breakingRanksPartyCodes.length > 0 &&
@@ -25,7 +27,13 @@
 
 <main>
   <h1>Breaking Ranks</h1>
+  <!-- svelte-ignore a11y-no-onchange -->
+  <select bind:value={selectedTerm} on:change={init}>
+    {#each termOptions as termOption}
+      <option value={termOption}>{termOption}</option>
+    {/each}
+  </select>
   {#each votes as vote}
     <Vote {vote} />
-  {/each}
+  {:else}Loading...{/each}
 </main>
