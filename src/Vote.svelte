@@ -2,6 +2,13 @@
   import type { Vote } from "./api";
 
   export let vote: Vote;
+
+  $: sortedTalliesByParty = Object.keys(vote.talliesByParty)
+    .sort((a, b) => a.localeCompare(b))
+    .map(partyCode => ({
+      ...vote.talliesByParty[partyCode],
+      partyCode
+    }));
 </script>
 
 <main>
@@ -18,12 +25,12 @@
         </tr>
       </thead>
       <tbody>
-        {#each Object.keys(vote.talliesByParty) as partyCode}
+        {#each sortedTalliesByParty as partyTally}
           <tr>
-            <td>{partyCode}</td>
-            <td>{vote.talliesByParty[partyCode].taVotes}</td>
-            <td>{vote.talliesByParty[partyCode].staonVotes}</td>
-            <td>{vote.talliesByParty[partyCode].nilVotes}</td>
+            <td>{partyTally.partyCode}</td>
+            <td>{partyTally.taVotes}</td>
+            <td>{partyTally.staonVotes}</td>
+            <td>{partyTally.nilVotes}</td>
           </tr>
         {/each}
       </tbody>
