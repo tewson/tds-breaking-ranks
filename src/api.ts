@@ -24,11 +24,15 @@ interface MemberApiResult {
   member: Member;
 }
 
+enum TallyType {
+  Staon = "staonVotes",
+  Ta = "taVotes",
+  Nil = "nilVotes"
+}
+
 interface TalliesByParty {
   [partyCode: string]: {
-    taVotes: number;
-    nilVotes: number;
-    staonVotes: number;
+    [tallyType in TallyType]: number;
   };
 }
 
@@ -49,11 +53,9 @@ interface VoteTally {
   tally: number;
 }
 
-interface VoteTallies {
-  staonVotes: VoteTally;
-  nilVotes: VoteTally;
-  taVotes: VoteTally;
-}
+type VoteTallies = {
+  [tallyType in TallyType]: VoteTally;
+};
 
 interface VoteApiResult {
   division: {
@@ -108,47 +110,25 @@ export async function fetchVotes(): Promise<Vote[]> {
 
   function getVoteTalliesByParty(tallies: VoteTallies) {
     const initialTallies = {
-      staonVotes: 0,
-      nilVotes: 0,
-      taVotes: 0
+      [TallyType.Ta]: 0,
+      [TallyType.Nil]: 0,
+      [TallyType.Staon]: 0
     };
 
     let talliesByParty: TalliesByParty = {};
 
-    tallies.staonVotes.members.forEach(memberWrapper => {
-      const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
-      if (talliesByParty[memberPartyCode]) {
-        talliesByParty[memberPartyCode].staonVotes++;
-      } else {
-        talliesByParty[memberPartyCode] = {
-          ...initialTallies,
-          staonVotes: 1
-        };
-      }
-    });
-
-    tallies.nilVotes.members.forEach(memberWrapper => {
-      const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
-      if (talliesByParty[memberPartyCode]) {
-        talliesByParty[memberPartyCode].nilVotes++;
-      } else {
-        talliesByParty[memberPartyCode] = {
-          ...initialTallies,
-          nilVotes: 1
-        };
-      }
-    });
-
-    tallies.taVotes.members.forEach(memberWrapper => {
-      const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
-      if (talliesByParty[memberPartyCode]) {
-        talliesByParty[memberPartyCode].taVotes++;
-      } else {
-        talliesByParty[memberPartyCode] = {
-          ...initialTallies,
-          taVotes: 1
-        };
-      }
+    [TallyType.Ta, TallyType.Staon, TallyType.Nil].forEach(tallyType => {
+      tallies[tallyType].members.forEach(memberWrapper => {
+        const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
+        if (talliesByParty[memberPartyCode]) {
+          talliesByParty[memberPartyCode][tallyType]++;
+        } else {
+          talliesByParty[memberPartyCode] = {
+            ...initialTallies,
+            [tallyType]: 1
+          };
+        }
+      });
     });
 
     return talliesByParty;
