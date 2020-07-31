@@ -87,7 +87,7 @@ function stringifyQueryParams(params: { [key: string]: string | number }) {
     .join("&");
 }
 
-export async function fetchMembers(term: number): Promise<Member[]> {
+export async function fetchMembers(term: string): Promise<Member[]> {
   const params = {
     chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/${term}`,
     limit: 10000
@@ -98,10 +98,9 @@ export async function fetchMembers(term: number): Promise<Member[]> {
   return results.map((result: MemberApiResult) => result.member);
 }
 
-function getMemberPartyCodeAtVoteTime(member: Member, term: number): string {
+function getMemberPartyCodeAtVoteTime(member: Member, term: string): string {
   const membershipAtVoteTime = member.memberships.find(
-    membershipWrapper =>
-      membershipWrapper.membership.house.houseNo === `${term}`
+    membershipWrapper => membershipWrapper.membership.house.houseNo === term
   )?.membership;
   const currentParty = membershipAtVoteTime?.parties.slice(-1).pop()?.party;
   return currentParty?.partyCode ?? "";
@@ -121,7 +120,7 @@ function hasBreakingRanks(tallyCounts: TallyCounts) {
   }, false);
 }
 
-export async function fetchVotes(term: number): Promise<Vote[]> {
+export async function fetchVotes(term: string): Promise<Vote[]> {
   const members = await fetchMembers(term);
   const params = {
     chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/${term}`,

@@ -5,7 +5,7 @@
   import Vote from "./Vote.svelte";
 
   let votes: VoteType[] = [];
-  const termOptions = [33, 32, 31];
+  const termOptions = ["33", "32", "31"];
   let selectedTerm = termOptions[0];
 
   async function init() {
