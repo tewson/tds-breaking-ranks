@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { fetchVotes } from "./api";
+  import { fetchMembers, fetchVotes } from "./api";
 
+  let members: any[] = [];
   let votes: string[] = [];
 
   async function init() {
+    members = await fetchMembers();
     votes = await fetchVotes();
   }
 
@@ -12,6 +14,11 @@
 
 <main>
   <h1>Breaking Ranks</h1>
+  <ul>
+    {#each members as member}
+      <li>{member.fullName}</li>
+    {/each}
+  </ul>
   <ul>
     {#each votes as vote}
       <li>{vote}</li>
