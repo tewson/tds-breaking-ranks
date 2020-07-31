@@ -42,7 +42,7 @@
       <tbody>
         {#each sortedTalliesByParty as { breakingRanks, partyCode, taVotes, staonVotes, nilVotes }}
           <tr class:has-background-warning={breakingRanks}>
-            <td class="party">{partyCode}</td>
+            <td class="party">{vote.partyLookup[partyCode].showAs}</td>
             <td>{taVotes.length}</td>
             <td>{staonVotes.length}</td>
             <td>{nilVotes.length}</td>

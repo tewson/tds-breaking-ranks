@@ -1,5 +1,6 @@
 interface Party {
   partyCode: string;
+  showAs: string;
 }
 
 interface PartyWrapper {
@@ -53,6 +54,7 @@ export interface Vote {
   subject: string;
   talliesByParty: TalliesByParty;
   breakingRanksPartyCodes: string[];
+  partyLookup: PartyLookupMap;
 }
 
 interface VoteTally {
@@ -91,6 +93,10 @@ interface MemberLookupMap {
   };
 }
 
+interface PartyLookupMap {
+  [partyCode: string]: Party;
+}
+
 const apiPrefix = "https://api.oireachtas.ie/v1";
 
 function stringifyQueryParams(params: { [key: string]: string | number }) {
@@ -108,6 +114,21 @@ export async function fetchMembers(term: string): Promise<Member[]> {
   const response = await fetch(url);
   const { results } = await response.json();
   return results.map((result: MemberApiResult) => result.member);
+}
+
+async function fetchParties(term: string): Promise<Party[]> {
+  const params = {
+    chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/${term}`,
+    limit: 10000
+  };
+  const url = `${apiPrefix}/parties?${stringifyQueryParams(params)}`;
+  const response = await fetch(url);
+  const {
+    results: {
+      house: { parties }
+    }
+  } = await response.json();
+  return parties.map((result: PartyWrapper) => result.party);
 }
 
 function getMemberPartyCodeAtVoteTime(member: Member, term: string): string {
@@ -134,6 +155,7 @@ function hasBreakingRanks(tallyCounts: TallyDetails) {
 
 export async function fetchVotes(term: string): Promise<Vote[]> {
   const members = await fetchMembers(term);
+  const parties = await fetchParties(term);
   const params = {
     chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/${term}`,
     limit: 10000
@@ -152,6 +174,13 @@ export async function fetchVotes(term: string): Promise<Vote[]> {
       }
     };
   }, {} as MemberLookupMap);
+
+  const partyLookup = parties.reduce((acc, party) => {
+    return {
+      ...acc,
+      [party.partyCode]: party
+    };
+  }, {} as PartyLookupMap);
 
   function getVoteTalliesByParty(tallies: VoteTallies) {
     let talliesByParty: TalliesByParty = {};
@@ -192,7 +221,8 @@ export async function fetchVotes(term: string): Promise<Vote[]> {
       debateTitle: result.division.debate.showAs,
       subject: result.division.subject.showAs,
       talliesByParty,
-      breakingRanksPartyCodes
+      breakingRanksPartyCodes,
+      partyLookup // This is awful but hey it works.
     } as Vote;
   });
 }
