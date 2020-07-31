@@ -7,13 +7,19 @@ interface MemberApiResult {
 }
 
 export interface Vote {
-  debate: {
-    showAs: string;
-  };
+  debateTitle: string;
+  subject: string;
 }
 
 interface VoteApiResult {
-  division: Vote;
+  division: {
+    debate: {
+      showAs: string;
+    };
+    subject: {
+      showAs: string;
+    };
+  };
 }
 
 const apiPrefix = "https://api.oireachtas.ie/v1";
@@ -35,7 +41,7 @@ export async function fetchMembers() {
   return results.map((result: MemberApiResult) => result.member);
 }
 
-export async function fetchVotes() {
+export async function fetchVotes(): Promise<Vote[]> {
   await fetchMembers();
   const params = {
     chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/33`,
@@ -44,5 +50,10 @@ export async function fetchVotes() {
   const url = `${apiPrefix}/divisions?${stringifyQueryParams(params)}`;
   const response = await fetch(url);
   const { results } = await response.json();
-  return results.map((result: VoteApiResult) => result.division);
+  return results.map((result: VoteApiResult) => {
+    return {
+      debateTitle: result.division.debate.showAs,
+      subject: result.division.subject.showAs
+    } as Vote;
+  });
 }

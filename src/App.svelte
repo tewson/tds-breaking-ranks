@@ -20,9 +20,10 @@
       <li>{member.fullName}</li>
     {/each}
   </ul>
-  <ul>
-    {#each votes as vote}
-      <li>{vote.debate.showAs}</li>
-    {/each}
-  </ul>
+  {#each votes as vote}
+    <div>
+      <h1>{vote.debateTitle}</h1>
+      <h2>{vote.subject}</h2>
+    </div>
+  {/each}
 </main>
