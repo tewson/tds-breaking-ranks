@@ -73,7 +73,7 @@
         {#each Object.keys(vote.talliesByParty) as partyCode}
           {#if vote.breakingRanksPartyCodes.includes(partyCode) && partyCode !== 'Independent'}
             <div class="box mb-5">
-              <h4 class="title is-6">{partyCode}</h4>
+              <h4 class="title is-6">{vote.partyLookup[partyCode].showAs}</h4>
               {#if vote.talliesByParty[partyCode].taVotes.length > 0}
                 <h5 class="title is-6">Tá</h5>
                 <div class="content">
