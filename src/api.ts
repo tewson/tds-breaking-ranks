@@ -1,5 +1,23 @@
+interface Party {
+  partyCode: string;
+}
+
+interface PartyWrapper {
+  party: Party;
+}
+
+interface Membership {
+  parties: PartyWrapper[];
+}
+
+interface MembershipWrapper {
+  membership: Membership;
+}
+
 export interface Member {
+  uri: string;
   fullName: string;
+  memberships: MembershipWrapper[];
 }
 
 interface MemberApiResult {
@@ -22,6 +40,10 @@ interface VoteApiResult {
   };
 }
 
+interface MemberPartyMap {
+  [memberUri: string]: string;
+}
+
 const apiPrefix = "https://api.oireachtas.ie/v1";
 
 function stringifyQueryParams(params: { [key: string]: string | number }) {
@@ -30,7 +52,7 @@ function stringifyQueryParams(params: { [key: string]: string | number }) {
     .join("&");
 }
 
-export async function fetchMembers() {
+export async function fetchMembers(): Promise<Member[]> {
   const params = {
     chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/33`,
     limit: 10000
@@ -41,8 +63,24 @@ export async function fetchMembers() {
   return results.map((result: MemberApiResult) => result.member);
 }
 
+function getMemberCurrentPartyCode(member: Member): string {
+  const currentMembership = member.memberships.slice(-1).pop()?.membership;
+  const currentParty = currentMembership?.parties.slice(-1).pop()?.party;
+  return currentParty?.partyCode ?? "";
+}
+
 export async function fetchVotes(): Promise<Vote[]> {
-  await fetchMembers();
+  const members = await fetchMembers();
+  const memberPartyMap = members.reduce((acc, member) => {
+    const partyCode = getMemberCurrentPartyCode(member);
+    return {
+      ...acc,
+      [member.uri]: partyCode
+    };
+  }, {} as MemberPartyMap);
+
+  console.log(memberPartyMap);
+
   const params = {
     chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/33`,
     limit: 10000
