@@ -52,6 +52,7 @@ export interface Vote {
   id: string;
   debateTitle: string;
   subject: string;
+  tallies: VoteTallies;
   talliesByParty: TalliesByParty;
   breakingRanksPartyCodes: string[];
   partyLookup: PartyLookupMap;
@@ -222,6 +223,7 @@ export async function fetchVotes(term: string): Promise<Vote[]> {
       id: result.division.voteId.replace("vote_", ""),
       debateTitle: result.division.debate.showAs,
       subject: result.division.subject.showAs,
+      tallies: result.division.tallies,
       talliesByParty,
       breakingRanksPartyCodes,
       partyLookup, // This is awful but hey it works.

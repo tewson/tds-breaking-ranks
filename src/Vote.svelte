@@ -53,6 +53,14 @@
           </tr>
         {/each}
       </tbody>
+      <tfoot class="has-text-weight-bold">
+        <tr>
+          <td>Total</td>
+          <td>{vote.tallies.taVotes.tally}</td>
+          <td>{vote.tallies.staonVotes.tally}</td>
+          <td>{vote.tallies.nilVotes.tally}</td>
+        </tr>
+      </tfoot>
     </table>
     <div>
       <div class="pb-4">
