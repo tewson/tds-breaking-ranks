@@ -55,6 +55,7 @@ export interface Vote {
   talliesByParty: TalliesByParty;
   breakingRanksPartyCodes: string[];
   partyLookup: PartyLookupMap;
+  outcome: string;
 }
 
 interface VoteTally {
@@ -83,6 +84,7 @@ interface VoteApiResult {
       showAs: string;
     };
     tallies: VoteTallies;
+    outcome: string;
   };
 }
 
@@ -222,7 +224,8 @@ export async function fetchVotes(term: string): Promise<Vote[]> {
       subject: result.division.subject.showAs,
       talliesByParty,
       breakingRanksPartyCodes,
-      partyLookup // This is awful but hey it works.
+      partyLookup, // This is awful but hey it works.
+      outcome: result.division.outcome
     } as Vote;
   });
 }

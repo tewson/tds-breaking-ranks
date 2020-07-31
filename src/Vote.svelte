@@ -30,6 +30,10 @@
   <div class="vote">
     <h2 class="title is-5">{vote.debateTitle}</h2>
     <h3 class="subtitle is-6">{vote.subject}</h3>
+    <p>
+      <label class="label is-inline">Outcome:</label>
+      {vote.outcome}
+    </p>
     <table class="table is-fullwidth">
       <thead>
         <tr>
