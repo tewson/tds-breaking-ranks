@@ -49,7 +49,7 @@
       <div>
         <label>
           <input type="checkbox" bind:checked={memberBreakingRanksShown} />
-          Show members who break ranks
+          Show votes against party
         </label>
       </div>
       {#if memberBreakingRanksShown}
