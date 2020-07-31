@@ -84,9 +84,9 @@ function stringifyQueryParams(params: { [key: string]: string | number }) {
     .join("&");
 }
 
-export async function fetchMembers(): Promise<Member[]> {
+export async function fetchMembers(term: number): Promise<Member[]> {
   const params = {
-    chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/33`,
+    chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/${term}`,
     limit: 10000
   };
   const url = `${apiPrefix}/members?${stringifyQueryParams(params)}`;
@@ -115,8 +115,8 @@ function hasBreakingRanks(tallyCounts: TallyCounts) {
   }, false);
 }
 
-export async function fetchVotes(): Promise<Vote[]> {
-  const members = await fetchMembers();
+export async function fetchVotes(term: number): Promise<Vote[]> {
+  const members = await fetchMembers(term);
   const memberPartyMap = members.reduce((acc, member) => {
     const partyCode = getMemberCurrentPartyCode(member);
     return {
@@ -153,7 +153,7 @@ export async function fetchVotes(): Promise<Vote[]> {
   }
 
   const params = {
-    chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/33`,
+    chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/${term}`,
     limit: 10000
   };
   const url = `${apiPrefix}/divisions?${stringifyQueryParams(params)}`;

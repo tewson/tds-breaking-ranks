@@ -5,9 +5,10 @@
   import Vote from "./Vote.svelte";
 
   let votes: VoteType[] = [];
+  let term = 33;
 
   async function init() {
-    const allVotes = await fetchVotes();
+    const allVotes = await fetchVotes(term);
     votes = allVotes.filter(vote => {
       return (
         vote.breakingRanksPartyCodes.length > 0 &&
