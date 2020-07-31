@@ -24,9 +24,35 @@ interface MemberApiResult {
   member: Member;
 }
 
+interface TalliesByParty {
+  [partyCode: string]: {
+    taVotes: number;
+    nilVotes: number;
+    staonVotes: number;
+  };
+}
+
 export interface Vote {
   debateTitle: string;
   subject: string;
+  talliesByParty: TalliesByParty;
+}
+
+interface VoteTally {
+  members: [
+    {
+      member: {
+        uri: string;
+      };
+    }
+  ];
+  tally: number;
+}
+
+interface VoteTallies {
+  staonVotes: VoteTally;
+  nilVotes: VoteTally;
+  taVotes: VoteTally;
 }
 
 interface VoteApiResult {
@@ -37,6 +63,7 @@ interface VoteApiResult {
     subject: {
       showAs: string;
     };
+    tallies: VoteTallies;
   };
 }
 
@@ -79,7 +106,53 @@ export async function fetchVotes(): Promise<Vote[]> {
     };
   }, {} as MemberPartyMap);
 
-  console.log(memberPartyMap);
+  function getVoteTalliesByParty(tallies: VoteTallies) {
+    const initialTallies = {
+      staonVotes: 0,
+      nilVotes: 0,
+      taVotes: 0
+    };
+
+    let talliesByParty: TalliesByParty = {};
+
+    tallies.staonVotes.members.forEach(memberWrapper => {
+      const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
+      if (talliesByParty[memberPartyCode]) {
+        talliesByParty[memberPartyCode].staonVotes++;
+      } else {
+        talliesByParty[memberPartyCode] = {
+          ...initialTallies,
+          staonVotes: 1
+        };
+      }
+    });
+
+    tallies.nilVotes.members.forEach(memberWrapper => {
+      const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
+      if (talliesByParty[memberPartyCode]) {
+        talliesByParty[memberPartyCode].nilVotes++;
+      } else {
+        talliesByParty[memberPartyCode] = {
+          ...initialTallies,
+          nilVotes: 1
+        };
+      }
+    });
+
+    tallies.taVotes.members.forEach(memberWrapper => {
+      const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
+      if (talliesByParty[memberPartyCode]) {
+        talliesByParty[memberPartyCode].taVotes++;
+      } else {
+        talliesByParty[memberPartyCode] = {
+          ...initialTallies,
+          taVotes: 1
+        };
+      }
+    });
+
+    return talliesByParty;
+  }
 
   const params = {
     chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/33`,
@@ -91,7 +164,8 @@ export async function fetchVotes(): Promise<Vote[]> {
   return results.map((result: VoteApiResult) => {
     return {
       debateTitle: result.division.debate.showAs,
-      subject: result.division.subject.showAs
+      subject: result.division.subject.showAs,
+      talliesByParty: getVoteTalliesByParty(result.division.tallies)
     } as Vote;
   });
 }
