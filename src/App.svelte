@@ -25,16 +25,29 @@
   init();
 </script>
 
+<style>
+  .dail-select label {
+    padding-top: 0.375em;
+  }
+</style>
+
 <main>
   <section class="section">
     <div class="container">
       <h1 class="title">Breaking Ranks</h1>
-      <!-- svelte-ignore a11y-no-onchange -->
-      <select bind:value={selectedTerm} on:change={init}>
-        {#each termOptions as termOption}
-          <option value={termOption}>{termOption}</option>
-        {/each}
-      </select>
+      <div class="dail-select mb-4">
+        <label for="dail-select" class="label is-inline-block mr-4">
+          Dáil term:
+        </label>
+        <div class="select">
+          <!-- svelte-ignore a11y-no-onchange -->
+          <select id="dail-select" bind:value={selectedTerm} on:change={init}>
+            {#each termOptions as termOption}
+              <option value={termOption}>{termOption}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
       {#each votes as vote}
         <Vote {vote} />
       {:else}Loading...{/each}
