@@ -8,6 +8,9 @@ interface PartyWrapper {
 
 interface Membership {
   parties: PartyWrapper[];
+  house: {
+    houseNo: string;
+  };
 }
 
 interface MembershipWrapper {
@@ -95,9 +98,12 @@ export async function fetchMembers(term: number): Promise<Member[]> {
   return results.map((result: MemberApiResult) => result.member);
 }
 
-function getMemberCurrentPartyCode(member: Member): string {
-  const currentMembership = member.memberships.slice(-1).pop()?.membership;
-  const currentParty = currentMembership?.parties.slice(-1).pop()?.party;
+function getMemberPartyCodeAtVoteTime(member: Member, term: number): string {
+  const membershipAtVoteTime = member.memberships.find(
+    membershipWrapper =>
+      membershipWrapper.membership.house.houseNo === `${term}`
+  )?.membership;
+  const currentParty = membershipAtVoteTime?.parties.slice(-1).pop()?.party;
   return currentParty?.partyCode ?? "";
 }
 
@@ -117,8 +123,16 @@ function hasBreakingRanks(tallyCounts: TallyCounts) {
 
 export async function fetchVotes(term: number): Promise<Vote[]> {
   const members = await fetchMembers(term);
+  const params = {
+    chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/${term}`,
+    limit: 10000
+  };
+  const url = `${apiPrefix}/divisions?${stringifyQueryParams(params)}`;
+  const response = await fetch(url);
+  const { results: voteResults } = await response.json();
+
   const memberPartyMap = members.reduce((acc, member) => {
-    const partyCode = getMemberCurrentPartyCode(member);
+    const partyCode = getMemberPartyCodeAtVoteTime(member, term);
     return {
       ...acc,
       [member.uri]: partyCode
@@ -152,14 +166,7 @@ export async function fetchVotes(term: number): Promise<Vote[]> {
     return talliesByParty;
   }
 
-  const params = {
-    chamber_id: `https://data.oireachtas.ie/ie/oireachtas/house/dail/${term}`,
-    limit: 10000
-  };
-  const url = `${apiPrefix}/divisions?${stringifyQueryParams(params)}`;
-  const response = await fetch(url);
-  const { results } = await response.json();
-  return results.map((result: VoteApiResult) => {
+  return voteResults.map((result: VoteApiResult) => {
     const talliesByParty = getVoteTalliesByParty(result.division.tallies);
     const breakingRanksPartyCodes = Object.keys(
       talliesByParty
