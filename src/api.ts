@@ -33,12 +33,16 @@ enum TallyType {
   Nil = "nilVotes"
 }
 
-type TallyCounts = {
-  [tallyType in TallyType]: number;
+interface TallyMember {
+  fullName: string;
+}
+
+type TallyDetails = {
+  [tallyType in TallyType]: TallyMember[];
 };
 
 interface TalliesByParty {
-  [partyCode: string]: TallyCounts;
+  [partyCode: string]: TallyDetails;
 }
 
 export interface Vote {
@@ -80,8 +84,11 @@ interface VoteApiResult {
   };
 }
 
-interface MemberPartyMap {
-  [memberUri: string]: string;
+interface MemberLookupMap {
+  [memberUri: string]: {
+    fullName: string;
+    partyCode: string;
+  };
 }
 
 const apiPrefix = "https://api.oireachtas.ie/v1";
@@ -111,16 +118,16 @@ function getMemberPartyCodeAtVoteTime(member: Member, term: string): string {
   return currentParty?.partyCode ?? "";
 }
 
-function hasBreakingRanks(tallyCounts: TallyCounts) {
+function hasBreakingRanks(tallyCounts: TallyDetails) {
   const tallySum = Object.keys(tallyCounts).reduce((acc, tallyType) => {
-    return acc + tallyCounts[tallyType as TallyType];
+    return acc + tallyCounts[tallyType as TallyType].length;
   }, 0);
 
   return Object.keys(tallyCounts).reduce((acc, tallyType) => {
     return (
       acc ||
-      (tallyCounts[tallyType as TallyType] !== 0 &&
-        tallyCounts[tallyType as TallyType] !== tallySum)
+      (tallyCounts[tallyType as TallyType].length !== 0 &&
+        tallyCounts[tallyType as TallyType].length !== tallySum)
     );
   }, false);
 }
@@ -135,34 +142,36 @@ export async function fetchVotes(term: string): Promise<Vote[]> {
   const response = await fetch(url);
   const { results: voteResults } = await response.json();
 
-  const memberPartyMap = members.reduce((acc, member) => {
+  const memberLookup = members.reduce((acc, member) => {
     const partyCode = getMemberPartyCodeAtVoteTime(member, term);
     return {
       ...acc,
-      [member.uri]: partyCode
+      [member.uri]: {
+        fullName: member.fullName,
+        partyCode
+      }
     };
-  }, {} as MemberPartyMap);
+  }, {} as MemberLookupMap);
 
   function getVoteTalliesByParty(tallies: VoteTallies) {
-    const initialTallies = {
-      [TallyType.Ta]: 0,
-      [TallyType.Nil]: 0,
-      [TallyType.Staon]: 0
-    };
-
     let talliesByParty: TalliesByParty = {};
 
     [TallyType.Ta, TallyType.Staon, TallyType.Nil].forEach(tallyType => {
       const tallyMembers = tallies[tallyType]?.members ?? [];
       tallyMembers.forEach(memberWrapper => {
-        const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
-        if (talliesByParty[memberPartyCode]) {
-          talliesByParty[memberPartyCode][tallyType]++;
-        } else {
-          talliesByParty[memberPartyCode] = {
-            ...initialTallies,
-            [tallyType]: 1
-          };
+        const tallyMember = memberLookup[memberWrapper.member.uri];
+        if (tallyMember) {
+          if (talliesByParty[tallyMember.partyCode]) {
+            talliesByParty[tallyMember.partyCode][tallyType].push(tallyMember);
+          } else {
+            talliesByParty[tallyMember.partyCode] = {
+              [TallyType.Ta]: [],
+              [TallyType.Nil]: [],
+              [TallyType.Staon]: []
+            };
+
+            talliesByParty[tallyMember.partyCode][tallyType] = [tallyMember];
+          }
         }
       });
     });
