@@ -26,14 +26,18 @@
 </script>
 
 <main>
-  <h1>Breaking Ranks</h1>
-  <!-- svelte-ignore a11y-no-onchange -->
-  <select bind:value={selectedTerm} on:change={init}>
-    {#each termOptions as termOption}
-      <option value={termOption}>{termOption}</option>
-    {/each}
-  </select>
-  {#each votes as vote}
-    <Vote {vote} />
-  {:else}Loading...{/each}
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Breaking Ranks</h1>
+      <!-- svelte-ignore a11y-no-onchange -->
+      <select bind:value={selectedTerm} on:change={init}>
+        {#each termOptions as termOption}
+          <option value={termOption}>{termOption}</option>
+        {/each}
+      </select>
+      {#each votes as vote}
+        <Vote {vote} />
+      {:else}Loading...{/each}
+    </div>
+  </section>
 </main>

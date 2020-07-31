@@ -16,19 +16,24 @@
 </script>
 
 <style>
-  .breaking-ranks {
-    background: red;
+  .vote {
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #dbdbdb;
+    margin-bottom: 2rem;
+  }
+  .party {
+    word-break: break-all;
   }
 </style>
 
 <main>
-  <div>
-    <h1>{vote.debateTitle}</h1>
-    <h2>{vote.subject}</h2>
-    <table>
+  <div class="vote">
+    <h2 class="title is-5">{vote.debateTitle}</h2>
+    <h3 class="subtitle is-6">{vote.subject}</h3>
+    <table class="table is-fullwidth">
       <thead>
         <tr>
-          <th>Party</th>
+          <th class="party">Party</th>
           <th>Tá</th>
           <th>Staon</th>
           <th>Níl</th>
@@ -36,8 +41,8 @@
       </thead>
       <tbody>
         {#each sortedTalliesByParty as { breakingRanks, partyCode, taVotes, staonVotes, nilVotes }}
-          <tr class:breaking-ranks={breakingRanks}>
-            <td>{partyCode}</td>
+          <tr class:has-background-warning={breakingRanks}>
+            <td class="party">{partyCode}</td>
             <td>{taVotes.length}</td>
             <td>{staonVotes.length}</td>
             <td>{nilVotes.length}</td>
@@ -46,8 +51,8 @@
       </tbody>
     </table>
     <div>
-      <div>
-        <label>
+      <div class="pb-4">
+        <label class="checkbox">
           <input type="checkbox" bind:checked={memberBreakingRanksShown} />
           Show votes against party
         </label>
@@ -55,31 +60,31 @@
       {#if memberBreakingRanksShown}
         {#each Object.keys(vote.talliesByParty) as partyCode}
           {#if vote.breakingRanksPartyCodes.includes(partyCode) && partyCode !== 'Independent'}
-            <div>
-              <h3>{partyCode}</h3>
+            <div class="box mb-5">
+              <h4 class="title is-6">{partyCode}</h4>
               {#if vote.talliesByParty[partyCode].taVotes.length > 0}
-                <h4>Tá</h4>
-                <p>
+                <h5 class="title is-6">Tá</h5>
+                <div class="content">
                   {vote.talliesByParty[partyCode].taVotes
                     .map(m => m.fullName)
                     .join(', ')}
-                </p>
+                </div>
               {/if}
               {#if vote.talliesByParty[partyCode].staonVotes.length > 0}
-                <h4>Staon</h4>
-                <p>
+                <h5 class="title is-6">Staon</h5>
+                <div class="content">
                   {vote.talliesByParty[partyCode].staonVotes
                     .map(m => m.fullName)
                     .join(', ')}
-                </p>
+                </div>
               {/if}
               {#if vote.talliesByParty[partyCode].nilVotes.length > 0}
-                <h4>Níl</h4>
-                <p>
+                <h5 class="title is-6">Níl</h5>
+                <div class="content">
                   {vote.talliesByParty[partyCode].nilVotes
                     .map(m => m.fullName)
                     .join(', ')}
-                </p>
+                </div>
               {/if}
             </div>
           {/if}
