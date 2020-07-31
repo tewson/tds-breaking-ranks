@@ -44,5 +44,9 @@
         {/each}
       </tbody>
     </table>
+    <a
+      href={`https://www.oireachtas.ie/en/debates/vote/dail/${vote.dailTerm}/${vote.date}/${vote.id}/`}>
+      View detailed results
+    </a>
   </div>
 </main>

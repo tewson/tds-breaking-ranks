@@ -42,6 +42,9 @@ interface TalliesByParty {
 }
 
 export interface Vote {
+  dailTerm: string;
+  date: string;
+  id: string;
   debateTitle: string;
   subject: string;
   talliesByParty: TalliesByParty;
@@ -65,6 +68,8 @@ type VoteTallies = {
 
 interface VoteApiResult {
   division: {
+    date: string;
+    voteId: string;
     debate: {
       showAs: string;
     };
@@ -172,6 +177,9 @@ export async function fetchVotes(term: string): Promise<Vote[]> {
     ).filter(partyCode => hasBreakingRanks(talliesByParty[partyCode]));
 
     return {
+      dailTerm: term,
+      date: result.division.date,
+      id: result.division.voteId.replace("vote_", ""),
       debateTitle: result.division.debate.showAs,
       subject: result.division.subject.showAs,
       talliesByParty,
