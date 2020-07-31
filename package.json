@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "rollup --config",
-    "dev": "rollup --config --watch",
+    "html": "mkdir -p public && cp src/index.html public",
+    "build": "npm run html && rollup --config",
+    "dev": " npm run html && rollup --config --watch",
     "start": "sirv public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
