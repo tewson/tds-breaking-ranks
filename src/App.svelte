@@ -11,7 +11,7 @@
 </script>
 
 <main>
-  <h1>Breaking Rank</h1>
+  <h1>Breaking Ranks</h1>
   <ul>
     {#each votes as vote}
       <li>{vote}</li>
