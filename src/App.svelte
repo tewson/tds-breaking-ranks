@@ -7,7 +7,16 @@
   let votes: VoteType[] = [];
 
   async function init() {
-    votes = await fetchVotes();
+    const allVotes = await fetchVotes();
+    votes = allVotes.filter(vote => {
+      return (
+        vote.breakingRanksPartyCodes.length > 0 &&
+        !(
+          vote.breakingRanksPartyCodes.length === 1 &&
+          vote.breakingRanksPartyCodes[0] === "Independent"
+        )
+      );
+    });
   }
 
   init();

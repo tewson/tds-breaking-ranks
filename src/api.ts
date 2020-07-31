@@ -24,13 +24,13 @@ interface MemberApiResult {
   member: Member;
 }
 
-export enum TallyType {
+enum TallyType {
   Staon = "staonVotes",
   Ta = "taVotes",
   Nil = "nilVotes"
 }
 
-export type TallyCounts = {
+type TallyCounts = {
   [tallyType in TallyType]: number;
 };
 
@@ -42,6 +42,7 @@ export interface Vote {
   debateTitle: string;
   subject: string;
   talliesByParty: TalliesByParty;
+  breakingRanksPartyCodes: string[];
 }
 
 interface VoteTally {
@@ -100,6 +101,20 @@ function getMemberCurrentPartyCode(member: Member): string {
   return currentParty?.partyCode ?? "";
 }
 
+function hasBreakingRanks(tallyCounts: TallyCounts) {
+  const tallySum = Object.keys(tallyCounts).reduce((acc, tallyType) => {
+    return acc + tallyCounts[tallyType as TallyType];
+  }, 0);
+
+  return Object.keys(tallyCounts).reduce((acc, tallyType) => {
+    return (
+      acc ||
+      (tallyCounts[tallyType as TallyType] !== 0 &&
+        tallyCounts[tallyType as TallyType] !== tallySum)
+    );
+  }, false);
+}
+
 export async function fetchVotes(): Promise<Vote[]> {
   const members = await fetchMembers();
   const memberPartyMap = members.reduce((acc, member) => {
@@ -144,10 +159,16 @@ export async function fetchVotes(): Promise<Vote[]> {
   const response = await fetch(url);
   const { results } = await response.json();
   return results.map((result: VoteApiResult) => {
+    const talliesByParty = getVoteTalliesByParty(result.division.tallies);
+    const breakingRanksPartyCodes = Object.keys(
+      talliesByParty
+    ).filter(partyCode => hasBreakingRanks(talliesByParty[partyCode]));
+
     return {
       debateTitle: result.division.debate.showAs,
       subject: result.division.subject.showAs,
-      talliesByParty: getVoteTalliesByParty(result.division.tallies)
+      talliesByParty,
+      breakingRanksPartyCodes
     } as Vote;
   });
 }

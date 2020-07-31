@@ -1,21 +1,7 @@
 <script lang="ts">
-  import type { Vote, TallyType, TallyCounts } from "./api";
+  import type { Vote } from "./api";
 
   export let vote: Vote;
-
-  function hasBreakingRanks(tallyCounts: TallyCounts) {
-    const tallySum = Object.keys(tallyCounts).reduce((acc, tallyType) => {
-      return acc + tallyCounts[tallyType as TallyType];
-    }, 0);
-
-    return Object.keys(tallyCounts).reduce((acc, tallyType) => {
-      return (
-        acc ||
-        (tallyCounts[tallyType as TallyType] !== 0 &&
-          tallyCounts[tallyType as TallyType] !== tallySum)
-      );
-    }, false);
-  }
 
   $: sortedTalliesByParty = Object.keys(vote.talliesByParty)
     .sort((a, b) => a.localeCompare(b))
@@ -23,8 +9,8 @@
       ...vote.talliesByParty[partyCode],
       partyCode,
       breakingRanks:
-        partyCode !== "Independent" &&
-        hasBreakingRanks(vote.talliesByParty[partyCode])
+        vote.breakingRanksPartyCodes.includes(partyCode) &&
+        partyCode !== "Independent"
     }));
 </script>
 
