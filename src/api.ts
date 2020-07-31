@@ -135,7 +135,8 @@ export async function fetchVotes(): Promise<Vote[]> {
     let talliesByParty: TalliesByParty = {};
 
     [TallyType.Ta, TallyType.Staon, TallyType.Nil].forEach(tallyType => {
-      tallies[tallyType].members.forEach(memberWrapper => {
+      const tallyMembers = tallies[tallyType]?.members ?? [];
+      tallyMembers.forEach(memberWrapper => {
         const memberPartyCode = memberPartyMap[memberWrapper.member.uri];
         if (talliesByParty[memberPartyCode]) {
           talliesByParty[memberPartyCode][tallyType]++;
