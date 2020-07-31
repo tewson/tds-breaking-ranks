@@ -56,9 +56,9 @@
       <tfoot class="has-text-weight-bold">
         <tr>
           <td>Total</td>
-          <td>{vote.tallies.taVotes.tally}</td>
-          <td>{vote.tallies.staonVotes.tally}</td>
-          <td>{vote.tallies.nilVotes.tally}</td>
+          <td>{vote.tallies.taVotes?.tally ?? 0}</td>
+          <td>{vote.tallies.staonVotes?.tally ?? 0}</td>
+          <td>{vote.tallies.nilVotes?.tally ?? 0}</td>
         </tr>
       </tfoot>
     </table>
