@@ -24,16 +24,18 @@ interface MemberApiResult {
   member: Member;
 }
 
-enum TallyType {
+export enum TallyType {
   Staon = "staonVotes",
   Ta = "taVotes",
   Nil = "nilVotes"
 }
 
+export type TallyCounts = {
+  [tallyType in TallyType]: number;
+};
+
 interface TalliesByParty {
-  [partyCode: string]: {
-    [tallyType in TallyType]: number;
-  };
+  [partyCode: string]: TallyCounts;
 }
 
 export interface Vote {

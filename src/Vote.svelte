@@ -1,15 +1,38 @@
 <script lang="ts">
-  import type { Vote } from "./api";
+  import type { Vote, TallyType, TallyCounts } from "./api";
 
   export let vote: Vote;
+
+  function hasBreakingRanks(tallyCounts: TallyCounts) {
+    const tallySum = Object.keys(tallyCounts).reduce((acc, tallyType) => {
+      return acc + tallyCounts[tallyType as TallyType];
+    }, 0);
+
+    return Object.keys(tallyCounts).reduce((acc, tallyType) => {
+      return (
+        acc ||
+        (tallyCounts[tallyType as TallyType] !== 0 &&
+          tallyCounts[tallyType as TallyType] !== tallySum)
+      );
+    }, false);
+  }
 
   $: sortedTalliesByParty = Object.keys(vote.talliesByParty)
     .sort((a, b) => a.localeCompare(b))
     .map(partyCode => ({
       ...vote.talliesByParty[partyCode],
-      partyCode
+      partyCode,
+      breakingRanks:
+        partyCode !== "Independent" &&
+        hasBreakingRanks(vote.talliesByParty[partyCode])
     }));
 </script>
+
+<style>
+  .breaking-ranks {
+    background: red;
+  }
+</style>
 
 <main>
   <div>
@@ -25,12 +48,12 @@
         </tr>
       </thead>
       <tbody>
-        {#each sortedTalliesByParty as partyTally}
-          <tr>
-            <td>{partyTally.partyCode}</td>
-            <td>{partyTally.taVotes}</td>
-            <td>{partyTally.staonVotes}</td>
-            <td>{partyTally.nilVotes}</td>
+        {#each sortedTalliesByParty as { breakingRanks, partyCode, taVotes, staonVotes, nilVotes }}
+          <tr class:breaking-ranks={breakingRanks}>
+            <td>{partyCode}</td>
+            <td>{taVotes}</td>
+            <td>{staonVotes}</td>
+            <td>{nilVotes}</td>
           </tr>
         {/each}
       </tbody>
