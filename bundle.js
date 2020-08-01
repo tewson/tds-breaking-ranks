@@ -847,15 +847,27 @@ var app = (function () {
     	let td0;
     	let t18;
     	let td1;
-    	let t19_value = (/*vote*/ ctx[0].tallies.taVotes?.tally ?? 0) + "";
+
+    	let t19_value = (/*vote*/ ctx[0].tallies.taVotes
+    	? /*vote*/ ctx[0].tallies.taVotes.tally
+    	: 0) + "";
+
     	let t19;
     	let t20;
     	let td2;
-    	let t21_value = (/*vote*/ ctx[0].tallies.staonVotes?.tally ?? 0) + "";
+
+    	let t21_value = (/*vote*/ ctx[0].tallies.staonVotes
+    	? /*vote*/ ctx[0].tallies.staonVotes.tally
+    	: 0) + "";
+
     	let t21;
     	let t22;
     	let td3;
-    	let t23_value = (/*vote*/ ctx[0].tallies.nilVotes?.tally ?? 0) + "";
+
+    	let t23_value = (/*vote*/ ctx[0].tallies.nilVotes
+    	? /*vote*/ ctx[0].tallies.nilVotes.tally
+    	: 0) + "";
+
     	let t23;
     	let t24;
     	let div1;
@@ -1028,9 +1040,17 @@ var app = (function () {
     				each_blocks.length = each_value_1.length;
     			}
 
-    			if (dirty & /*vote*/ 1 && t19_value !== (t19_value = (/*vote*/ ctx[0].tallies.taVotes?.tally ?? 0) + "")) set_data(t19, t19_value);
-    			if (dirty & /*vote*/ 1 && t21_value !== (t21_value = (/*vote*/ ctx[0].tallies.staonVotes?.tally ?? 0) + "")) set_data(t21, t21_value);
-    			if (dirty & /*vote*/ 1 && t23_value !== (t23_value = (/*vote*/ ctx[0].tallies.nilVotes?.tally ?? 0) + "")) set_data(t23, t23_value);
+    			if (dirty & /*vote*/ 1 && t19_value !== (t19_value = (/*vote*/ ctx[0].tallies.taVotes
+    			? /*vote*/ ctx[0].tallies.taVotes.tally
+    			: 0) + "")) set_data(t19, t19_value);
+
+    			if (dirty & /*vote*/ 1 && t21_value !== (t21_value = (/*vote*/ ctx[0].tallies.staonVotes
+    			? /*vote*/ ctx[0].tallies.staonVotes.tally
+    			: 0) + "")) set_data(t21, t21_value);
+
+    			if (dirty & /*vote*/ 1 && t23_value !== (t23_value = (/*vote*/ ctx[0].tallies.nilVotes
+    			? /*vote*/ ctx[0].tallies.nilVotes.tally
+    			: 0) + "")) set_data(t23, t23_value);
 
     			if (dirty & /*memberBreakingRanksShown*/ 2) {
     				input.checked = /*memberBreakingRanksShown*/ ctx[1];
