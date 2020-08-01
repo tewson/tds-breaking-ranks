@@ -36,6 +36,10 @@
     <div class="container">
       <h1 class="title">Breaking Ranks</h1>
       <h2 class="subtitle">Which TDs have voted against their party?</h2>
+      <h6 class="subtitle is-7">
+        * Data from
+        <a href="https://api.oireachtas.ie/">the Oireachtas Open Data APIs.</a>
+      </h6>
       <div class="dail-select mb-4">
         <label for="dail-select" class="label is-inline-block mr-4">
           Dáil term:
