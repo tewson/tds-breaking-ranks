@@ -4,6 +4,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
 import sveltePreprocess from "svelte-preprocess";
 import typescript from "@rollup/plugin-typescript";
+import { terser } from "rollup-plugin-terser";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -57,7 +58,9 @@ export default {
 
     !production && serve(),
 
-    !production && livereload("public")
+    !production && livereload("public"),
+
+    production && terser()
   ],
   watch: {
     clearScreen: false
