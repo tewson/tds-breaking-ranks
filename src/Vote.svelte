@@ -31,6 +31,8 @@
     <h2 class="title is-5">{vote.debateTitle}</h2>
     <h3 class="subtitle is-6">{vote.subject}</h3>
     <p>
+      <strong>{vote.date}</strong>
+      |
       <label class="label is-inline">Outcome:</label>
       {vote.outcome}
     </p>
