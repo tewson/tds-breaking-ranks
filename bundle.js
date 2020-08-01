@@ -460,7 +460,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (39:8) {#each sortedTalliesByParty as { breakingRanks, partyCode, taVotes, staonVotes, nilVotes }}
+    // (41:8) {#each sortedTalliesByParty as { breakingRanks, partyCode, taVotes, staonVotes, nilVotes }}
     function create_each_block_1(ctx) {
     	let tr;
     	let td0;
@@ -529,7 +529,7 @@ var app = (function () {
     	};
     }
 
-    // (64:6) {#if memberBreakingRanksShown}
+    // (66:6) {#if memberBreakingRanksShown}
     function create_if_block(ctx) {
     	let each_1_anchor;
     	let each_value = Object.keys(/*vote*/ ctx[0].talliesByParty);
@@ -585,7 +585,7 @@ var app = (function () {
     	};
     }
 
-    // (66:10) {#if vote.breakingRanksPartyCodes.includes(partyCode) && partyCode !== 'Independent'}
+    // (68:10) {#if vote.breakingRanksPartyCodes.includes(partyCode) && partyCode !== 'Independent'}
     function create_if_block_1(ctx) {
     	let div;
     	let h4;
@@ -677,7 +677,7 @@ var app = (function () {
     	};
     }
 
-    // (69:14) {#if vote.talliesByParty[partyCode].taVotes.length > 0}
+    // (71:14) {#if vote.talliesByParty[partyCode].taVotes.length > 0}
     function create_if_block_4(ctx) {
     	let h5;
     	let t1;
@@ -712,7 +712,7 @@ var app = (function () {
     	};
     }
 
-    // (77:14) {#if vote.talliesByParty[partyCode].staonVotes.length > 0}
+    // (79:14) {#if vote.talliesByParty[partyCode].staonVotes.length > 0}
     function create_if_block_3(ctx) {
     	let h5;
     	let t1;
@@ -747,7 +747,7 @@ var app = (function () {
     	};
     }
 
-    // (85:14) {#if vote.talliesByParty[partyCode].nilVotes.length > 0}
+    // (87:14) {#if vote.talliesByParty[partyCode].nilVotes.length > 0}
     function create_if_block_2(ctx) {
     	let h5;
     	let t1;
@@ -782,7 +782,7 @@ var app = (function () {
     	};
     }
 
-    // (65:8) {#each Object.keys(vote.talliesByParty) as partyCode}
+    // (67:8) {#each Object.keys(vote.talliesByParty) as partyCode}
     function create_each_block(ctx) {
     	let show_if = /*vote*/ ctx[0].breakingRanksPartyCodes.includes(/*partyCode*/ ctx[4]) && /*partyCode*/ ctx[4] !== "Independent";
     	let if_block_anchor;
@@ -832,53 +832,57 @@ var app = (function () {
     	let t2;
     	let t3;
     	let p;
-    	let label0;
+    	let strong;
+    	let t4_value = /*vote*/ ctx[0].date + "";
+    	let t4;
     	let t5;
-    	let t6_value = /*vote*/ ctx[0].outcome + "";
-    	let t6;
+    	let label0;
     	let t7;
+    	let t8_value = /*vote*/ ctx[0].outcome + "";
+    	let t8;
+    	let t9;
     	let table;
     	let thead;
-    	let t15;
+    	let t17;
     	let tbody;
-    	let t16;
+    	let t18;
     	let tfoot;
     	let tr1;
     	let td0;
-    	let t18;
+    	let t20;
     	let td1;
 
-    	let t19_value = (/*vote*/ ctx[0].tallies.taVotes
+    	let t21_value = (/*vote*/ ctx[0].tallies.taVotes
     	? /*vote*/ ctx[0].tallies.taVotes.tally
-    	: 0) + "";
-
-    	let t19;
-    	let t20;
-    	let td2;
-
-    	let t21_value = (/*vote*/ ctx[0].tallies.staonVotes
-    	? /*vote*/ ctx[0].tallies.staonVotes.tally
     	: 0) + "";
 
     	let t21;
     	let t22;
-    	let td3;
+    	let td2;
 
-    	let t23_value = (/*vote*/ ctx[0].tallies.nilVotes
-    	? /*vote*/ ctx[0].tallies.nilVotes.tally
+    	let t23_value = (/*vote*/ ctx[0].tallies.staonVotes
+    	? /*vote*/ ctx[0].tallies.staonVotes.tally
     	: 0) + "";
 
     	let t23;
     	let t24;
+    	let td3;
+
+    	let t25_value = (/*vote*/ ctx[0].tallies.nilVotes
+    	? /*vote*/ ctx[0].tallies.nilVotes.tally
+    	: 0) + "";
+
+    	let t25;
+    	let t26;
     	let div1;
     	let div0;
     	let label1;
     	let input;
-    	let t25;
-    	let t26;
     	let t27;
-    	let a;
     	let t28;
+    	let t29;
+    	let a;
+    	let t30;
     	let a_href_value;
     	let mounted;
     	let dispose;
@@ -902,11 +906,14 @@ var app = (function () {
     			t2 = text(t2_value);
     			t3 = space();
     			p = element("p");
+    			strong = element("strong");
+    			t4 = text(t4_value);
+    			t5 = text("\n      |\n      ");
     			label0 = element("label");
     			label0.textContent = "Outcome:";
-    			t5 = space();
-    			t6 = text(t6_value);
     			t7 = space();
+    			t8 = text(t8_value);
+    			t9 = space();
     			table = element("table");
     			thead = element("thead");
 
@@ -915,38 +922,38 @@ var app = (function () {
           <th>Staon</th> 
           <th>Níl</th></tr>`;
 
-    			t15 = space();
+    			t17 = space();
     			tbody = element("tbody");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t16 = space();
+    			t18 = space();
     			tfoot = element("tfoot");
     			tr1 = element("tr");
     			td0 = element("td");
     			td0.textContent = "Total";
-    			t18 = space();
-    			td1 = element("td");
-    			t19 = text(t19_value);
     			t20 = space();
-    			td2 = element("td");
+    			td1 = element("td");
     			t21 = text(t21_value);
     			t22 = space();
-    			td3 = element("td");
+    			td2 = element("td");
     			t23 = text(t23_value);
     			t24 = space();
+    			td3 = element("td");
+    			t25 = text(t25_value);
+    			t26 = space();
     			div1 = element("div");
     			div0 = element("div");
     			label1 = element("label");
     			input = element("input");
-    			t25 = text("\n          Show votes against party");
-    			t26 = space();
+    			t27 = text("\n          Show votes against party");
+    			t28 = space();
     			if (if_block) if_block.c();
-    			t27 = space();
+    			t29 = space();
     			a = element("a");
-    			t28 = text("View details on oireachtas.ie");
+    			t30 = text("View details on oireachtas.ie");
     			attr(h2, "class", "title is-5");
     			attr(h3, "class", "subtitle is-6");
     			attr(label0, "class", "label is-inline");
@@ -968,44 +975,47 @@ var app = (function () {
     			append(h3, t2);
     			append(div2, t3);
     			append(div2, p);
-    			append(p, label0);
+    			append(p, strong);
+    			append(strong, t4);
     			append(p, t5);
-    			append(p, t6);
-    			append(div2, t7);
+    			append(p, label0);
+    			append(p, t7);
+    			append(p, t8);
+    			append(div2, t9);
     			append(div2, table);
     			append(table, thead);
-    			append(table, t15);
+    			append(table, t17);
     			append(table, tbody);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(tbody, null);
     			}
 
-    			append(table, t16);
+    			append(table, t18);
     			append(table, tfoot);
     			append(tfoot, tr1);
     			append(tr1, td0);
-    			append(tr1, t18);
-    			append(tr1, td1);
-    			append(td1, t19);
     			append(tr1, t20);
-    			append(tr1, td2);
-    			append(td2, t21);
+    			append(tr1, td1);
+    			append(td1, t21);
     			append(tr1, t22);
+    			append(tr1, td2);
+    			append(td2, t23);
+    			append(tr1, t24);
     			append(tr1, td3);
-    			append(td3, t23);
-    			append(div2, t24);
+    			append(td3, t25);
+    			append(div2, t26);
     			append(div2, div1);
     			append(div1, div0);
     			append(div0, label1);
     			append(label1, input);
     			input.checked = /*memberBreakingRanksShown*/ ctx[1];
-    			append(label1, t25);
-    			append(div1, t26);
+    			append(label1, t27);
+    			append(div1, t28);
     			if (if_block) if_block.m(div1, null);
-    			append(div2, t27);
+    			append(div2, t29);
     			append(div2, a);
-    			append(a, t28);
+    			append(a, t30);
 
     			if (!mounted) {
     				dispose = listen(input, "change", /*input_change_handler*/ ctx[3]);
@@ -1015,7 +1025,8 @@ var app = (function () {
     		p(ctx, [dirty]) {
     			if (dirty & /*vote*/ 1 && t0_value !== (t0_value = /*vote*/ ctx[0].debateTitle + "")) set_data(t0, t0_value);
     			if (dirty & /*vote*/ 1 && t2_value !== (t2_value = /*vote*/ ctx[0].subject + "")) set_data(t2, t2_value);
-    			if (dirty & /*vote*/ 1 && t6_value !== (t6_value = /*vote*/ ctx[0].outcome + "")) set_data(t6, t6_value);
+    			if (dirty & /*vote*/ 1 && t4_value !== (t4_value = /*vote*/ ctx[0].date + "")) set_data(t4, t4_value);
+    			if (dirty & /*vote*/ 1 && t8_value !== (t8_value = /*vote*/ ctx[0].outcome + "")) set_data(t8, t8_value);
 
     			if (dirty & /*sortedTalliesByParty, vote*/ 5) {
     				each_value_1 = /*sortedTalliesByParty*/ ctx[2];
@@ -1040,17 +1051,17 @@ var app = (function () {
     				each_blocks.length = each_value_1.length;
     			}
 
-    			if (dirty & /*vote*/ 1 && t19_value !== (t19_value = (/*vote*/ ctx[0].tallies.taVotes
+    			if (dirty & /*vote*/ 1 && t21_value !== (t21_value = (/*vote*/ ctx[0].tallies.taVotes
     			? /*vote*/ ctx[0].tallies.taVotes.tally
-    			: 0) + "")) set_data(t19, t19_value);
-
-    			if (dirty & /*vote*/ 1 && t21_value !== (t21_value = (/*vote*/ ctx[0].tallies.staonVotes
-    			? /*vote*/ ctx[0].tallies.staonVotes.tally
     			: 0) + "")) set_data(t21, t21_value);
 
-    			if (dirty & /*vote*/ 1 && t23_value !== (t23_value = (/*vote*/ ctx[0].tallies.nilVotes
-    			? /*vote*/ ctx[0].tallies.nilVotes.tally
+    			if (dirty & /*vote*/ 1 && t23_value !== (t23_value = (/*vote*/ ctx[0].tallies.staonVotes
+    			? /*vote*/ ctx[0].tallies.staonVotes.tally
     			: 0) + "")) set_data(t23, t23_value);
+
+    			if (dirty & /*vote*/ 1 && t25_value !== (t25_value = (/*vote*/ ctx[0].tallies.nilVotes
+    			? /*vote*/ ctx[0].tallies.nilVotes.tally
+    			: 0) + "")) set_data(t25, t25_value);
 
     			if (dirty & /*memberBreakingRanksShown*/ 2) {
     				input.checked = /*memberBreakingRanksShown*/ ctx[1];
